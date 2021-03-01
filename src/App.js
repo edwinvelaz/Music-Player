@@ -2,6 +2,8 @@ import React from 'react'
 //Adding components
 import Player from './Components/Player';
 import Song from './Components/Song'
+//Styles
+import './styles/app.scss';
 
 function App() {
   return (
