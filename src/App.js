@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react'
 //Adding components
 import Player from './Components/Player';
-import Song from './Components/Song'
-import Library from './Components/Library'
+import Song from './Components/Song';
+import Library from './Components/Library';
+import Nav from './Components/Nav';
 //Styles
 import './styles/app.scss';
 //Import Data
@@ -18,7 +19,8 @@ function App() {
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0
-})
+  })
+  const [libraryStatus, setLibraryStatus] = useState(false);
 
   //Handlers
 
@@ -30,6 +32,7 @@ function App() {
 }
   return (
     <div className="App">
+      <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus}/>
       <Song currentSong={currentSong}/>
       <Player
         songInfo={songInfo}
@@ -40,11 +43,13 @@ function App() {
         currentSong={currentSong}
       />
       <Library
+        libraryStatus={libraryStatus}
         songs={songs}
         setCurrentSong={setCurrentSong}
         audioRef={audioRef}
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
+        setSongs={setSongs}
       />
       <audio
           //Time to be loaded without clicking
