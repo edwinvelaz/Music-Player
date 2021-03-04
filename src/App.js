@@ -7,7 +7,7 @@ import Nav from './Components/Nav';
 //Styles
 import './styles/app.scss';
 //Import Data
-import data from './util';
+import data from './data';
 
 
 function App() {
@@ -18,28 +18,41 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
-    duration: 0
+    duration: 0,
+    animationPercentage: 0
   })
   const [libraryStatus, setLibraryStatus] = useState(false);
 
   //Handlers
+  const songEndHandler = async () => {
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+    if (isPlaying) audioRef.current.play();
+  }
 
   //Time updater
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
-    const duration = e.target.duration
-    setSongInfo({ ...songInfo, currentTime: current, duration })
+    const duration = e.target.duration;
+    //Calculate percentage
+    const roundedCurrent = Math.round(current);
+    const roundedDuration = Math.round(duration);
+    const animation = Math.round((roundedCurrent / roundedDuration) * 100)
+    setSongInfo({ ...songInfo, currentTime: current, duration, animationPercentage: animation })
 }
   return (
-    <div className="App">
+    <div className={`App ${libraryStatus ? "library-active" : ""}`}>
       <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus}/>
       <Song currentSong={currentSong}/>
       <Player
+        setSongs={setSongs}
+        songs={songs}
         songInfo={songInfo}
         setSongInfo={setSongInfo}
         audioRef={audioRef}
         isPlaying={isPlaying}
         setIsPlaying={setIsPlaying}
+        setCurrentSong={setCurrentSong}
         currentSong={currentSong}
       />
       <Library
@@ -52,14 +65,17 @@ function App() {
         setSongs={setSongs}
       />
       <audio
-          //Time to be loaded without clicking
-          onLoadedMetadata={timeUpdateHandler}
-          //Time update
-          onTimeUpdate={timeUpdateHandler}
-          //In order to access html tag outside use ref
-          ref={audioRef}
-          //State's audio
-          src={currentSong.audio}>    
+        //Time to be loaded without clicking
+        onLoadedMetadata={timeUpdateHandler}
+        //Time update
+        onTimeUpdate={timeUpdateHandler}
+        //In order to access html tag outside use ref
+        ref={audioRef}
+        //State's audio
+        src={currentSong.audio}
+        //Skip song
+        onEnded={songEndHandler}
+      >          
       </audio>
     </div>
   );
