@@ -22,6 +22,11 @@ function App() {
     animationPercentage: 0
   })
   const [libraryStatus, setLibraryStatus] = useState(false);
+  const [isImgRotating, setIsImgRotating] = useState(false);
+  const [backgroundChange, setBackgroundChange] = useState({
+    color: '',
+    active: false
+  })
 
   //Handlers
   const songEndHandler = async () => {
@@ -39,44 +44,61 @@ function App() {
     const roundedDuration = Math.round(duration);
     const animation = Math.round((roundedCurrent / roundedDuration) * 100)
     setSongInfo({ ...songInfo, currentTime: current, duration, animationPercentage: animation })
-}
+  }
+  
   return (
-    <div className={`App ${libraryStatus ? "library-active" : ""}`}>
-      <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus}/>
-      <Song currentSong={currentSong}/>
-      <Player
-        setSongs={setSongs}
-        songs={songs}
-        songInfo={songInfo}
-        setSongInfo={setSongInfo}
-        audioRef={audioRef}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        setCurrentSong={setCurrentSong}
-        currentSong={currentSong}
-      />
+    <div className={`App ${libraryStatus ? "library-active" : ""} ${backgroundChange.active ? 'background-changed' : 'background-paused'}`}>
+        <Nav
+          libraryStatus={libraryStatus}
+          setLibraryStatus={setLibraryStatus}
+        />
+        <Song
+          isImgRotating={isImgRotating}
+          setIsImgRotating={setIsImgRotating}
+          currentSong={currentSong}
+        />
+        <Player
+          backgroundChange={backgroundChange}
+          setBackgroundChange={setBackgroundChange}
+          setIsImgRotating={setIsImgRotating}
+          isImgRotating={isImgRotating}
+          setSongs={setSongs}
+          songs={songs}
+          songInfo={songInfo}
+          setSongInfo={setSongInfo}
+          audioRef={audioRef}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          setCurrentSong={setCurrentSong}
+          currentSong={currentSong}
+        />
       <Library
-        libraryStatus={libraryStatus}
-        songs={songs}
-        setCurrentSong={setCurrentSong}
-        audioRef={audioRef}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        setSongs={setSongs}
-      />
-      <audio
-        //Time to be loaded without clicking
-        onLoadedMetadata={timeUpdateHandler}
-        //Time update
-        onTimeUpdate={timeUpdateHandler}
-        //In order to access html tag outside use ref
-        ref={audioRef}
-        //State's audio
-        src={currentSong.audio}
-        //Skip song
-        onEnded={songEndHandler}
-      >          
-      </audio>
+          backgroundChange={backgroundChange}
+          setBackgroundChange={setBackgroundChange}
+          isImgRotating={isImgRotating}
+          setIsImgRotating={setIsImgRotating}
+          libraryStatus={libraryStatus}
+          songs={songs}
+          currentSong={currentSong}
+          setCurrentSong={setCurrentSong}
+          audioRef={audioRef}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          setSongs={setSongs}
+        />
+        <audio
+          //Time to be loaded without clicking
+          onLoadedMetadata={timeUpdateHandler}
+          //Time update
+          onTimeUpdate={timeUpdateHandler}
+          //In order to access html tag outside use ref
+          ref={audioRef}
+          //State's audio
+          src={currentSong.audio}
+          //Skip song
+          onEnded={songEndHandler}
+        >          
+        </audio>
     </div>
   );
 }

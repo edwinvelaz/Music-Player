@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faAngleLeft, faAngleRight, faPause } from '@fortawesome/free-solid-svg-icons';
 
 
-const Player = ({ setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef, setSongInfo, songInfo, songs, setSongs}) => {
+const Player = ({ setIsImgRotating, isImgRotating, setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef, setSongInfo, songInfo, songs, setSongs, backgroundChange, setBackgroundChange}) => {
     //Refs
     
     //Handlers
@@ -32,9 +32,15 @@ const Player = ({ setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef
         if (isPlaying) {
             audioRef.current.pause();
             setIsPlaying(!isPlaying);
+            setIsImgRotating(!isImgRotating)
+            setBackgroundChange({ ...backgroundChange, color: currentSong.color, active: false })
+            console.log(backgroundChange)
         } else {
             audioRef.current.play();
             setIsPlaying(!isPlaying);
+            setIsImgRotating(!isImgRotating)
+            setBackgroundChange({ ...backgroundChange, color: currentSong.color, active: true })
+            console.log(backgroundChange)
         }
     }
 
@@ -58,6 +64,7 @@ const Player = ({ setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef
             activeLibraryHandler(songs[(currentIndex + 1) % songs.length])
         }
         if (direction === 'skip-back') {
+            //Last song
             if ((currentIndex - 1) % songs.length === -1) {
                 await setCurrentSong(songs[songs.length - 1])
                 activeLibraryHandler(songs[songs.length - 1])
@@ -66,6 +73,8 @@ const Player = ({ setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef
                 } else {
                     setIsPlaying(!isPlaying);
                     audioRef.current.play();
+                    setIsImgRotating(isImgRotating)
+                    setBackgroundChange({ ...backgroundChange, color: currentSong.color, active: false })
                 }
                 return;
             }
@@ -77,6 +86,8 @@ const Player = ({ setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef
         } else {
             setIsPlaying(!isPlaying);
             audioRef.current.play();
+            setIsImgRotating(!isImgRotating)
+            setBackgroundChange({ ...backgroundChange, color: currentSong.color, active: true })
         }
     }
 
@@ -99,7 +110,7 @@ const Player = ({ setCurrentSong, currentSong, isPlaying, setIsPlaying, audioRef
                         //Starts at 0
                         min={0}
                         //Ends on song duration
-                        max={songInfo.duration}
+                        max={songInfo.duration || 0}
                         //Wherever the slide should be
                         value={songInfo.currentTime}
                         type='range'

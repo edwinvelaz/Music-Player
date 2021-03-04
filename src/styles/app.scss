@@ -7,17 +7,18 @@
 h1,
 h2,
 h3 {
-  color: rgb(59, 59, 59);
+  color: #140d0b;
 }
 
 body {
   font-family: "Lato", sans-serif;
+  background: black;
 }
 
 h3,
 h4 {
   font-weight: 400;
-  color: rgb(100, 100, 100);
+  color: #140d0b;
 }
 
 .App {
@@ -26,6 +27,14 @@ h4 {
 
 .library-active {
   margin-left: 15%;
+}
+
+.background-changed {
+  background: #ffc0ad;
+}
+
+.background-paused {
+  background: #55423d;
 }
 
 @import "./song";

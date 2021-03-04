@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const LibrarySong = ({ song, setCurrentSong, songs, id, audioRef, isPlaying, setIsPlaying, setSongs }) => {
+const LibrarySong = ({ backgroundChange, setBackgroundChange, isImgRotating, setIsImgRotating, song, setCurrentSong, currentSong, songs, id, audioRef, isPlaying, setIsPlaying, setSongs }) => {
     //Handlers
 
     //Selecting song by id
@@ -24,9 +24,13 @@ const LibrarySong = ({ song, setCurrentSong, songs, id, audioRef, isPlaying, set
         setSongs(newSongs)
         if (isPlaying) {
             audioRef.current.play();
+            setIsImgRotating(isImgRotating)
+            setBackgroundChange({ ...backgroundChange, color: currentSong.color, active: true })
         } else {
             setIsPlaying(!isPlaying);
             audioRef.current.play();
+            setIsImgRotating(!isImgRotating)
+            setBackgroundChange({ ...backgroundChange, color: currentSong.color, active: true })
         }
     }
 
