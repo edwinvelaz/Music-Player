@@ -97,8 +97,8 @@ function App() {
           src={currentSong.audio}
           //Skip song
           onEnded={songEndHandler}
-        >          
-        </audio>
+               
+        />
     </div>
   );
 }
